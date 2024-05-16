@@ -1,8 +1,3 @@
-#使用session做簡單的使用者認證，管理狀態
-#Jinja2 render html templates
-#Request class從fastapi被imported
-#記得安裝mysql-connector-python
-#HTTPException是做什麼的?
 from fastapi import FastAPI, Form, Request, HTTPException, Query, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
@@ -12,20 +7,9 @@ from mysql.connector import errorcode, Error
 from pydantic import BaseModel
 from typing import Optional
 
-#從FastAPI class創造一個Object
-#這個object作為主要的處理器，處理所有的configurations(設定), routes, middleware, and event listeners
-#她管理server和web application之間的互動，處理被送進來的request，也送出response給clients
 app = FastAPI()
-#session是一種儲存機制，目的是儲存登入訊息，sessionMiddleware的session數據是直接加密後儲存在cookie裡面
-#需要一個密鑰來加密存在cookie裡面的session data
 app.add_middleware(SessionMiddleware, secret_key="your_secret_key_here")
-#jinja2是用來render在"templates"資料夾裡面的html templates
 templates = Jinja2Templates(directory="templates")
-
-
-#這個endpoint處理"被送進來的username、password"，並傳送數據(post)給其他的endpoints
-#endpoint是指一個url pattern，這個url pattern被server曝光給客戶，讓客戶能跟這個url互動
-#客戶跟endpoint互動的方法有"GET/ POST/ PUT/ DELETE etc"
 
 # Database connection parameters
 db_config = {
@@ -36,13 +20,9 @@ db_config = {
     'raise_on_warnings': True
 }
 
-
 #測試中____________________________________________________________________________________________
 
-
 # Pydantic models for request and response
-#因為使用者會透過html傳送GET request過來要資料，我們先把要給使用者的資料用class做一個規範整理
-#如果要傳給使用者的資料不符合這個規定，就會有error
 class MemberResponse(BaseModel):
     id: int
     name: str
@@ -51,11 +31,7 @@ class MemberResponse(BaseModel):
 class MemberResponseWrapper(BaseModel):
     data: Optional[MemberResponse]
 
-
 # API endpoint to get member data by real name
-#this is a decorator tells FASTAPI to create a route with path "/api/member" 
-#get 代表這個route會respond to HTTP GET requests
-#(A,B)裡面的B是讓FastAPI知道要送回給使用者的data要符合這個class的格式以及轉成JSON檔
 @app.get("/api/member", response_model=MemberResponseWrapper)
 def read_member(username: str = Query(...)):
     try:
@@ -85,7 +61,7 @@ def read_member(username: str = Query(...)):
         print(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-
+#更改會員的name
 @app.patch("/api/member", response_model=dict)
 async def update_name(request:Request):
 
@@ -116,16 +92,9 @@ async def update_name(request:Request):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"error": True}) 
     finally:
         cursor.close()
-        conn.close()
-
-
-        
-
+        conn.close()   
 
 #測試中____________________________________________________________________________________________
-
-
-
 
 def get_db_connection():
     try:
@@ -233,8 +202,6 @@ async def delete_message(request: Request, message_id: int = Form(...)):
 
 #登入會員
 @app.post("/signin")
-#request是一個參數，並註解Request。 註解代表講清楚這個變數包含了什麼type of data或是這個函數應該期待什麼type的data會輸入或返回
-#後面兩個參數從表格資料提取username & password
 async def handle_login(request: Request, username: str = Form(None), password: str = Form(None)):
     conn = get_db_connection()
     if conn is None:
