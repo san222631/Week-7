@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0" />
+    <title>Error Page</title>
+</head>
+<body style="min-height: 100vh; margin: 0; padding: 0">
+    <div style="background-color: lightblue; text-align: center; padding-top: 20px; padding-bottom: 20px;">
+        <h1 lang="zh-Hant">失敗頁面</h1>
+    </div>
+
+    <div style="text-align: center;">
+        <!--Jinja2會從url的"message=要顯示的訊息"，提取"要顯示的訊息"，顯示在這邊的message-->
+        <h2>{{ message }}</h2>
+        <!-- 不確定是要/還是/signout***Use a link for logout instead of a form to match the GET request -->
+        <a href="/signout" style="text-decoration: underline; padding: 10px 20px; border-radius: 5px; font-weight: bold;">返回首頁</a>
+    </div>
+
+</body>
+</html>

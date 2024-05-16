@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0" />
+    <title>Sign In Form</title>
+    <!--因為這個JS很重要!放在<head>裡面比較易懂-->
+    <script>
+        //DOMContentLoaded >>> 當整個document(DOM) loaded以後，JS就會執行
+        //EventListener >>> 等待某個特定event發生，例如使用者click button、submit form、moving mouse、pressing key
+        //當特定event發生以後，eventListener會觸發你想觸發的功能
+        //
+        document.addEventListener('DOMContentLoaded', function () {
+            //在<body>裡面的form被選擇並指定給新的常數叫form
+            const signinForm = document.getElementById('signinForm');
+            const signupform = document.getElementById('signupForm');
+            //form被加上eventListener，當form被submit的時候會觸發功能
+            //這個功能會處理submit event
+            signinForm.addEventListener('submit', function (event) {
+                //避免頁面reload的bug
+                event.preventDefault();
+                //從form input獲得username & password
+                const username = document.getElementsByName('username')[0].value;
+                const password = document.getElementsByName('password')[0].value;                
+                //如果某一個欄位空白，redirect瀏覽器到error 
+                if (!username || !password) {
+                    window.location.href = '/error?message=Please enter username and password';
+                    return;
+                }
+                signinForm.submit();
+            });
+
+            signupForm.addEventListener('submit', function (event) {
+                //避免頁面reload的bug
+                event.preventDefault();
+                //從form input獲得realname & username & password
+                const realname = document.getElementsByName('signupRealname')[0].value;
+                const username = document.getElementsByName('signupUsername')[0].value;
+                const password = document.getElementsByName('signupPassword')[0].value;                
+                //如果某一個欄位空白，redirect瀏覽器到error 
+                if (!realname || !username || !password) {
+                    window.location.href = '/error?message=Please enter realname, username and password';
+                    return;
+                }
+                signupForm.submit();
+            });
+
+        });
+    </script>
+</head>
+<body style="min-height: 100vh; margin: 0; padding: 0">
+    <div style="background-color: lightblue; text-align: center; padding-top: 20px; padding-bottom: 20px;">
+        <h1 lang="zh-Hant">歡迎光臨，請註冊登入系統</h1>
+    </div>
+    <!--註冊系統-->
+    <div style="text-align: center;">
+        <h2 lang="zh-Hant">註冊帳號</h2>
+        <!--signup-->
+        <form id="signupForm" action="/signup" method="post">
+            <!--realname-->
+            <div style="padding-bottom: 5px;">
+                <label lang="zh-Hant">姓名:</label>
+                <input type="text" name="signupRealname">
+            </div>
+
+            <div style="padding-bottom: 5px;">
+                <label lang="zh-Hant">帳號:</label>
+                <input type="text" name="signupUsername">
+            </div>
+
+            <div>
+                <label lang="zh-Hant">密碼:</label>
+                <input type="password" name="signupPassword" requ>
+            </div>
+
+            <br>
+            <div>
+                <button type="submit" lang="zh-Hant">註冊</button>
+            </div>
+        </form>
+    </div>
+    <br>
+
+    <hr>
+    <!--登入系統-->
+    <div style="text-align: center;">
+        <h2 lang="zh-Hant">登入系統</h2>
+        <!--signin-->
+        <!--交出表格的時候使用POST指令-->
+        <form id="signinForm" action="/signin" method="post">
+            <div style="padding-bottom: 5px;">
+                <label lang="zh-Hant">帳號:</label>
+                <input type="text" name="username">
+            </div>
+            <div>
+                <label lang="zh-Hant">密碼:</label>
+                <input type="password" name="password">
+            </div>
+            <br>
+            <!--
+            <div>
+                <label>
+                    <input type="checkbox" id="agreeTerms" name="agree" lang="zh-Hant"> 同意條款
+                </label>
+            </div>
+            -->
+            <div>
+                <button type="submit" lang="zh-Hant">登入</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
